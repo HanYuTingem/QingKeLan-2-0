@@ -22,6 +22,8 @@
 + (void)clearPHP;
 
 + (void)clearJava;
++ (NSString *)getAuthUserId;
+
 //领取离线的饺子
 +(void)publicLoadDataWithNoLoginGetMoney;
 @end

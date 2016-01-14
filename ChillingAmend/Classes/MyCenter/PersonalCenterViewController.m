@@ -503,6 +503,8 @@
     // 点击退出登录
     [kkUserInfo clearInfo];
     [BSaveMessage clear];
+    [SaveMessage clearJava];
+    [SaveMessage clearPHP];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:B_JIFEN];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:UserIDKey];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:LoginPhoneKey];

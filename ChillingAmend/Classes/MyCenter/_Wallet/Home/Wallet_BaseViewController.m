@@ -152,13 +152,13 @@
     [backView addSubview:_mallTitleLabel];
     
     
-    // 没有网络时  10.15 添加
-    [GCUtil connectedToNetwork:^(NSString *connectedToNet) {
-        if ([connectedToNet isEqualToString:NotReachable2]) {
-            [MBProgressHUD showConnectNetWork:connectedToNet toView:self.view];
-            return ;
-        }
-    }];
+//    // 没有网络时  10.15 添加
+//    [GCUtil connectedToNetwork:^(NSString *connectedToNet) {
+//        if ([connectedToNet isEqualToString:NotReachable2]) {
+//            [MBProgressHUD showConnectNetWork:connectedToNet toView:self.view];
+//            return ;
+//        }
+//    }];
     
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
     {

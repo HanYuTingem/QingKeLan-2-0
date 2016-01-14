@@ -145,6 +145,12 @@
         }];
     }
 }
++ (NSString *)getAuthUserId {
+    NSUserDefaults *userData = [NSUserDefaults standardUserDefaults];
+    NSDictionary *dict = [userData valueForKey:usernameMessageJava];
+    return dict[@"auth"];
+}
+
 
 +(void)clearJava
 {

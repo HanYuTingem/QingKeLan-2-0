@@ -48,7 +48,15 @@ static AppDelegate *appdelegate;
     //    [NdUncaughtExceptionHandler setDefaultHandler];
     //    [[NdUncaughtExceptionHandler Instence] sethttpBug];
     
-    
+    if ([SaveMessage getAuthUserId] == nil || [[SaveMessage getAuthUserId] isEqualToString:@""]) {
+        [SaveMessage clearJava];
+        [SaveMessage clearPHP];
+
+        [kkUserInfo clearInfo];
+        [BSaveMessage clear];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:B_JIFEN];
+        [ZHLoginInfoManager removeCacheAndOutLogin];
+    }
     //地图初始化
     _mapManager = [[BMKMapManager alloc]init];
     // 如果要关注网络及授权验证事件，请设定     generalDelegate参数
@@ -102,6 +110,8 @@ static AppDelegate *appdelegate;
     [UMSocialData defaultData].extConfig.qzoneData.title=@"来自青稞蓝的分享";//qq空
     [UMSocialData defaultData].extConfig.wechatSessionData.title=@"来自青稞蓝的分享";//微信好友
     [UMSocialData defaultData].extConfig.tencentData.title=@"来自青稞蓝的分享";//腾讯
+    [UMSocialConfig hiddenNotInstallPlatforms:@[UMShareToQQ, UMShareToQzone, UMShareToWechatSession, UMShareToWechatTimeline]];
+
     
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_7_1
     if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
@@ -165,7 +175,19 @@ static AppDelegate *appdelegate;
     [self.window makeKeyAndVisible];
     [self.window  addSubview:self.loadingView];
     
+//    [self UMShareMethod];
     return YES;
+}
+- (void)UMShareMethod{
+    [UMSocialData setAppKey:LYL_UM_KEY];
+    NSArray *sharePlatformArray = @[UMShareToWechatSession,UMShareToWechatTimeline,UMShareToSina];
+    [UMSocialConfig hiddenNotInstallPlatforms:sharePlatformArray];
+    [UMSocialQQHandler setSupportWebView:YES];
+    
+    if (sharePlatformArray.count == 0) {
+        [LYLTools showInfoAlert:@"当前设备没有任何可分享应用，请安装应用后在分享"];
+    }
+    [UMSocialConfig setFinishToastIsHidden:NO position:UMSocialiToastPositionCenter];
 }
 
 // 调用加载首页的试图控制器

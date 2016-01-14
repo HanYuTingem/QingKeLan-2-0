@@ -28,10 +28,14 @@
 
 + (void)removeCacheAndOutLogin{
     MySetObjectForKey(@"", UserIDKey);
+    MySetObjectForKey(@"", LoginPhoneKey);
     //清除缓存饺子信息
     NSMutableArray *dumplingLogingInforArray = [NSMutableArray arrayWithContentsOfFile:DumplingInforLogingPath];
     [dumplingLogingInforArray removeAllObjects];
     [dumplingLogingInforArray writeToFile:DumplingInforLogingPath atomically:YES];
 }
-
+- (void)saveLoginInfoWithUserId:(NSString *)userId andPhone:(NSString *)phone{
+    MySetObjectForKey(userId, UserIDKey);
+    MySetObjectForKey(phone, LoginPhoneKey);
+}
 @end
