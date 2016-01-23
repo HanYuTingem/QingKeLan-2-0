@@ -9,11 +9,10 @@
 #import "Wallet_BaseViewController.h"
 
 @interface mineWalletViewController : Wallet_BaseViewController
-
 /**
  *  必须实现
  */
 @property (nonatomic, copy) void(^backBlock)();
-@property (nonatomic, copy) NSString *type; //1.未登录点击我得钱包 ，登陆后进的我得钱包
+@property (nonatomic, copy) NSString *type;//1 登录界面进入的钱包
 
 @end

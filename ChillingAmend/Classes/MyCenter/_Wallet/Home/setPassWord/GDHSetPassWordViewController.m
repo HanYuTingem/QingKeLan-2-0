@@ -27,7 +27,7 @@
     self.confirmButton.layer.cornerRadius = 4;
 
     self.sendButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    NSString *str = kkUserName;//@"13700000000";
+    NSString *str = kkUserName;
     NSRange range = NSMakeRange(3, 4);
     NSString *starStr = [str stringByReplacingCharactersInRange:range withString:@"****"];
     self.VerificationCode.text = [NSString stringWithFormat:@"验证码将发送到注册账户时的手机号%@,请注意查收。如果有问题请拨打400-832-1933",starStr];
@@ -45,11 +45,11 @@
 
 /** 导航 */
 -(void)makeNav{
-    self.backView.backgroundColor = WalletHomeNAVGRD
+//    self.backView.backgroundColor = WalletHomeNAVGRD
     self.mallTitleLabel.text = @"支付密码";
-    self.mallTitleLabel.textColor = [UIColor whiteColor];
-    [self.leftBackButton setImage:[UIImage imageNamed:@"title_btn_back02"] forState:UIControlStateNormal];
-    self.mallTitleLabel.font = WalletHomeNAVTitleFont
+//    self.mallTitleLabel.textColor = [UIColor whiteColor];
+//    [self.leftBackButton setImage:[UIImage imageNamed:@"title_btn_back"] forState:UIControlStateNormal];
+//    self.mallTitleLabel.font = WalletHomeNAVTitleFont
     mainView.backgroundColor = [UIColor whiteColor];
 }
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -57,8 +57,8 @@
 }
 /** 发送按钮事件 */
 - (IBAction)thnSendButtonDown:(id)sender {
- 
-    
+    self.sendButton.enabled = NO;
+
     [self chrysanthemumOpen];
     
     NSDictionary *dict = [WalletRequsetHttp WalletPersonUsergetCodet1113];
@@ -70,21 +70,31 @@
         NSLog(@"%@",dic[@"msg"]);
         if ([dic[@"code"] isEqualToString:@"100"]) {
             
-            NSString *passWordRS = dic[@"rs"];
             theTime = 60;
             self.time =  [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(theTimeIsCountdown) userInfo:nil repeats:YES];
             [[NSRunLoop mainRunLoop]addTimer:self.time forMode:NSDefaultRunLoopMode];
+            NSString *passWordRS = dic[@"rs"];
             self.passWord = [NSString stringWithFormat:@"%@",passWordRS];
-        }else if([dic[@"code"] isEqualToString:@"101"]){
-            [self showMsg:dic[@"msg"]];
+        }else {
+            NSString *message = dic[@"msg"];
+            if (message.length) {
+                [self showMsg:message];
+            } else {
+                [self showMsg:ShowMessage];
+            }
+            self.sendButton.enabled = YES;
         }
         
         NSLog(@"%@",json);
     } failure:^(NSError *error) {
+        self.sendButton.enabled = YES;
+
         [self showMsg:ShowMessage];
         [self chrysanthemumClosed];
         NSLog(@"%@",error);
     } noNet:^{
+        self.sendButton.enabled = YES;
+
         [self chrysanthemumClosed];
     }];
 }
@@ -92,7 +102,6 @@
 /**  时间倒计时 */
 -(void)theTimeIsCountdown{
     if (theTime > 0) {
-        self.sendButton.enabled = NO;
         
         NSLog(@"%d",theTime);
         /**  7.1.1版本 set 赋值有问题 */
@@ -103,7 +112,7 @@
         self.sendButton.enabled = YES;
         [self.time  invalidate];
         self.time = nil;
-        [self.sendButton setTitle:@"发送验证码" forState:UIControlStateNormal];
+        [self.sendButton setTitle:@"重新获取" forState:UIControlStateNormal];
     }
 }
 
@@ -122,6 +131,16 @@
         return;
     }
     payPassWordViewController *payPassWord = [[payPassWordViewController alloc] init];
+    payPassWord.fromVcToSetPassWord = self.fromVcToSetPassWord;
+    
+    payPassWord.LYLpayPushtoSetpassWord = self.LYLPushtoSetpassWord;
+//    payPassWord.findPassWord = self.findPassWord;
     [self.navigationController pushViewController:payPassWord animated:YES];
 }
+
+- (void)dealloc
+{
+    [self chrysanthemumClosed];
+}
+
 @end

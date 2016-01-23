@@ -51,11 +51,16 @@
         self.BankOfChinalabel.hidden = YES;
         self.inputView.hidden = NO;
     }else{
-        
+        self.selectButton.hidden = YES;
+
         [self.rightButton setTitle:@"解除绑定" forState:UIControlStateNormal];
-        [self.rightButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        self.rightButton.titleLabel.font = [UIFont boldSystemFontOfSize:15];
-        self.rightButton.frame = CGRectMake(ScreenWidth - 70, self.rightButton.frame.origin.y + 10, 60, 30);
+        [self.rightButton setTitleColor:WalletHomeNAVTitleColor forState:UIControlStateNormal];
+        self.rightButton.titleLabel.font = WalletHomeNAVRigthFont;
+//        self.rightButton.frame = CGRectMake(ScreenWidth - 70, self.rightButton.frame.origin.y + 10, 60, 30);
+        CGRect frame = self.rightButton.frame;
+        frame.size.width += 20;
+        frame.origin.x -= 20;
+        self.rightButton.frame = frame;
         self.BankOfChinalabel.hidden = NO;
         self.inputView.hidden = YES;
         [self request1115BlankID:[NSString stringWithFormat:@"%@",self.bankID]];
@@ -152,15 +157,17 @@
  平安银行	B041
  */
 - (void)loadData{
-    self.arr = @[@"招商银行",@"工商银行",@"农业银行",@"中国银行",@"建设银行",@"交通银行",@"民生银行",@"邮储银行",@"中信银行",@"光大银行",@"浦发银行",@"广发银行",@"华夏银行",@"兴业银行",@"平安银行"];
-        [self.bankArray removeAllObjects];
+    [self.bankArray removeAllObjects];
 
-    for (NSString *str in self.arr) {
-        if ([str rangeOfString:inputString].location != NSNotFound ) {
-            NSLog(@"%@",str);
-            [self.bankArray addObject:str];
-        }
-    }
+    self.arr = @[@"招商银行",@"工商银行",@"农业银行",@"中国银行",@"建设银行",@"交通银行",@"民生银行",@"邮储银行",@"中信银行",@"光大银行",@"浦发银行",@"广发银行",@"华夏银行",@"兴业银行",@"平安银行"];
+    [self.bankArray addObjectsFromArray:self.arr];
+
+//    for (NSString *str in self.arr) {
+//        if ([str rangeOfString:inputString].location != NSNotFound ) {
+//            NSLog(@"%@",str);
+//            [self.bankArray addObject:str];
+//        }
+//    }
     [self.allBankTableView reloadData];
 }
 
@@ -175,11 +182,11 @@
 
 /** 设置导航 */
 -(void)makeNav{
-    self.backView.backgroundColor = WalletHomeNAVGRD
+//    self.backView.backgroundColor = WalletHomeNAVGRD;
     self.mallTitleLabel.text  = @"我的银行卡";
-    self.mallTitleLabel.textColor = [UIColor whiteColor];
-    self.mallTitleLabel.font = WalletHomeNAVTitleFont
-    [self.leftBackButton setImage:[UIImage imageNamed:@"title_btn_back02"] forState:UIControlStateNormal];
+//    self.mallTitleLabel.textColor = [UIColor whiteColor];
+//    self.mallTitleLabel.font = WalletHomeNAVTitleFont
+//    [self.leftBackButton setImage:[UIImage imageNamed:@"title_btn_back"] forState:UIControlStateNormal];
 }
 -(void)makeTitle{
    btn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -391,5 +398,23 @@ static NSString *iden = @"iden";
     }else{// 平安银行
         return @"不在所属银行之内";
     }
+}
+
+- (void)dealloc
+{
+    [self chrysanthemumClosed];
+}
+
+- (IBAction)selectButtonDown:(id)sender {
+    
+    if (!self.selectButton.selected) {
+        self.allBankTableView.hidden = NO;
+        self.maskView.hidden = NO;
+    }else{
+        self.allBankTableView.hidden = YES;
+        self.maskView.hidden = YES;
+    }
+    
+    self.selectButton.selected =! self.selectButton.selected;
 }
 @end

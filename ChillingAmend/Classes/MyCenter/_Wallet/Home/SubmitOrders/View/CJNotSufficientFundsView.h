@@ -12,7 +12,11 @@ typedef NS_ENUM(int, BalanceViewType){
     /** 余额不足 */
     BalanceViewTypeNoBalance,
     /** 余额充足 */
-    BalanceViewTypeHaveBalance
+    BalanceViewTypeHaveBalance,
+    /** 余额锁定 */
+    BalanceViewTypeClosebalance,
+    /** 没有记录  */
+    BalanceViewTypeNoRecord
 };
 
 @protocol CJNotSufficientFundsViewDelegate <NSObject>
@@ -27,9 +31,17 @@ typedef NS_ENUM(int, BalanceViewType){
 /** 点击事件的回调方法 tag 0支付宝 1微信 2U付 3钱包 */
 @property (nonatomic, copy) void(^blookBtnClick)(UIButton *);
 @property (nonatomic, assign) id<CJNotSufficientFundsViewDelegate> delegate;
+/** 余额支付隐藏 (暂时没有弄) */
+@property (nonatomic, assign) BOOL balanceHidden;
+/** 余额数 */
+@property (nonatomic, copy) NSString *balanceStr;
+/** 订单金额 */
+@property (nonatomic, copy) NSString *cashStr;
+
 
 /** 单例对象 必须先实现单例方法 */
-+ (CJNotSufficientFundsView *)sharedView;
++ (CJNotSufficientFundsView *)sharedViewWithController:(Wallet_BaseViewController *)controller andRequestStr:(NSString *)request;
+- (instancetype)initWithFrame:(CGRect)frame withController:(Wallet_BaseViewController *)controlle andRequestStr:(NSString *)requestr;
 
 /** 选择充值支付类型的状态 balanceViewType余额是否充足 */
 - (void)notSufficientFundsViewType:(BalanceViewType)balanceViewType;

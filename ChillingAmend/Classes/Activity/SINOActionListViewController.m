@@ -278,6 +278,8 @@
             detailVC.shareContent = commomModel.share_content;
             detailVC.shareTitle = commomModel.name;
             detailVC.actionId = commomModel.actionId;
+//            detailVC.shareUrl = [[NSString stringWithFormat:@"%@?activityId=%@&productId=%@",self.actionListModel.active_url,actionId,LOGOAction] stringByReplacingOccurrencesOfString:@"activiIndex" withString:@"activiShare"];
+            detailVC.shareUrl = [NSString stringWithFormat:@"%@index.php/activity/activiShare?activityId=%@&productId=%@",HttpHead,actionId,LOGOAction];
             detailVC.type = commomModel.type;
             [self.navigationController pushViewController:detailVC animated:YES];
             

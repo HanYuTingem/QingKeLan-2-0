@@ -24,7 +24,12 @@
 /**  刷新数据 */
 -(void)refreshAccount:(GDHRsModel *)model{
     
-    self.RechargeTypeLabel.text = [NSString stringWithFormat:@"%@",model.bussinessName];
+    if (model.modelDes.length) {
+        self.RechargeTypeLabel.text = [NSString stringWithFormat:@"%@",model.modelDes];
+    } else {
+        self.RechargeTypeLabel.text = [NSString stringWithFormat:@"%@",model.bussinessName];
+    }
+    
     self.YearMDLale.text  = [NSString stringWithFormat:@"%@",[WalletRequsetHttp WalletTimeDateFormatterWithStr:model.createDate]];
     if ([[NSString stringWithFormat:@"%@",model.amountType] isEqualToString:@"0"]) {// 0 标识收入，1表示 支出
         self.moneyLabel.text = [NSString stringWithFormat:@"+%@",model.amount];

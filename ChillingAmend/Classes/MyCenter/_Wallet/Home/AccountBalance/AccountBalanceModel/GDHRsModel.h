@@ -34,5 +34,8 @@
 /**  名称 */
 @property (nonatomic,copy) NSString *bussinessName;
 
+/** 商品描述 */
+@property (nonatomic, copy) NSString *modelDes;
+
 -(id)initWithDic:(NSDictionary *)dic;
 @end

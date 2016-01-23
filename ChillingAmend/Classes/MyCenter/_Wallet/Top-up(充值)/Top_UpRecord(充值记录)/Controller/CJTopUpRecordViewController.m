@@ -12,6 +12,8 @@
 #import "WalletRequsetHttp.h"
 #import "MJRefresh.h"
 #import "CJTopUpModel.h"
+#import "CJTopUpDetailsViewController.h"
+#import "CJCashDetailsViewController.h"
 
 #define cellH 42
 @interface CJTopUpRecordViewController ()<UITableViewDataSource,UITableViewDelegate>
@@ -56,8 +58,18 @@
     self.count = 20;
     // 初始化界面
     [self makeInitView];
-    [self setRequestData];
     [self makeTableVeiw];
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self setRequestData];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self chrysanthemumClosed];
 }
 
 /** 得到网络请求数据 */
@@ -66,7 +78,15 @@
     [self chrysanthemumOpen];
     NSDictionary *dict = [WalletRequsetHttp WalletPersonRechargeGetCashRecordSuccessFailure1108WithType:self.recordType page:self.page count:self.count];
     
-    NSString *url = [NSString stringWithFormat:@"%@%@",WalletHttp_Record1108,[dict JSONFragment]];
+    NSString *urlStr;
+    if ([self.recordType intValue] == 1) {
+        urlStr = WalletHttp_Record1108;
+    } else {
+        urlStr = WalletHttp_Record1108getChargeLog;
+    }
+    
+    NSString *url = [NSString stringWithFormat:@"%@%@",urlStr,[dict JSONFragment]];
+    
     [SINOAFNetWorking postWithBaseURL:url controller:self success:^(id json) {
         self.noRecordView.hidden = YES;
         [self endRefresh];
@@ -81,22 +101,25 @@
             return ;
         }
         self.totalCount = dicData[@"num"];
+        
+        NSLog(@"json == %@",json);
         for (NSDictionary *dic in dicData[@"rs"]) {
             if (![[NSString stringWithFormat:@"%@",dic[@"amountType"]] isEqualToString:@"<null>"]) {
-                if ([self.recordType intValue] == [dic[@"amountType"] intValue]) {
+                //                if ([self.recordType intValue] == [dic[@"amountType"] intValue]) {
+                if ([dic[@"status"] intValue] != 4) {//提现记录里面不显示手续费
                     CJTopUpModel *model = [[CJTopUpModel alloc] init];
                     [model setValuesForKeysWithDictionary:dic];
                     [self.dataArray addObject:model];
                 }
             }
         }
-//        NSArray *array = dicData[@"rs"];
+        //        NSArray *array = dicData[@"rs"];
         if (!self.dataArray.count) {
-//            [self showMsg:ShowNoMessage];
+            //            [self showMsg:ShowNoMessage];
             self.noRecordView.hidden = NO;
         }
         
-//        [self setTableFrame];
+        //        [self setTableFrame];
         [_tableView reloadData];
         [self chrysanthemumClosed];
         
@@ -104,21 +127,21 @@
         [self showMsg:ShowMessage];
         [self endRefresh];
         [self chrysanthemumClosed];
-
+        
     } noNet:^{
         [self endRefresh];
         self.noRecordView.hidden = NO;
         [self chrysanthemumClosed];
     }];
-
+    
 }
 /** 结束刷新 */
 - (void)endRefresh
 {
     [_footer endRefreshing];
     [_header endRefreshing];
-//    [_tableView.header endRefreshing];
-//    [_tableView.footer endRefreshing];
+    //    [_tableView.header endRefreshing];
+    //    [_tableView.footer endRefreshing];
 }
 
 /** 初始化界面 */
@@ -144,20 +167,20 @@
     noRecordLabel.textAlignment = NSTextAlignmentCenter;
     noRecordLabel.textColor = [UIColor colorWithRed:0.49f green:0.49f blue:0.49f alpha:1.00f];
     noRecordLabel.font = [UIFont systemFontOfSize:14];
-//    noRecordLabel.hidden = YES;
+    //    noRecordLabel.hidden = YES;
     noRecordLabel.text = @"还没有充值记录哦~";
     [view addSubview:noRecordLabel];
     self.noRecordLabel = noRecordLabel;
     
-    self.backView.backgroundColor = WalletHomeNAVGRD;
+    //    self.backView.backgroundColor = WalletHomeNAVGRD;
     self.mallTitleLabel.text = @"充值记录";
     if ([self.recordType isEqualToString:@"1"]) {
         self.mallTitleLabel.text = @"提现记录";
         noRecordLabel.text = @"还没有提现记录哦~";
     }
-    self.mallTitleLabel.textColor = WalletHomeNAVTitleColor;
-    self.mallTitleLabel.font = WalletHomeNAVTitleFont;
-    [self.leftBackButton setImage:[UIImage imageNamed:@"title_btn_back02"] forState:UIControlStateNormal];
+    //    self.mallTitleLabel.textColor = WalletHomeNAVTitleColor;
+    //    self.mallTitleLabel.font = WalletHomeNAVTitleFont;
+    //    [self.leftBackButton setImage:[UIImage imageNamed:@"title_btn_back"] forState:UIControlStateNormal];
     self.view.backgroundColor = WalletHomeBackGRD;
     
 }
@@ -165,14 +188,14 @@
 - (void)setTableFrame
 {
     NSUInteger numCell = self.dataArray.count;
-    if (cellH * numCell < ScreenHeight - 64) {
+    if (cellH * numCell < ScreenHeight - 65) {
         CGRect frame = _tableView.frame;
         frame.size.height = cellH * numCell;
         _tableView.frame = frame;
     } else {
         _tableView.scrollEnabled = YES;
         CGRect frame = _tableView.frame;
-        frame.size.height = ScreenHeight - 64;
+        frame.size.height = ScreenHeight - 65;
         _tableView.frame = frame;
     }
 }
@@ -183,14 +206,17 @@ static NSString *cellID = @"recordCell";
 - (void)makeTableVeiw
 {
     /** cell的个数 */
-//    NSUInteger numCell = 100;
-    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, ScreenWidth, ScreenHeight - 64)];
+    //    NSUInteger numCell = 100;
+    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 65, ScreenWidth, ScreenHeight - 65)];
+    if ([self.recordType isEqualToString:@"1"]) {
+//        _tableView.allowsSelection = NO;
+    }
     _tableView.delegate = self;
     _tableView.dataSource = self;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.backgroundColor = [UIColor colorWithRed:0.96f green:0.96f blue:0.96f alpha:1.00f];
     [self.view addSubview:_tableView];
-//    _tableView.footer.automaticallyHidden = NO;
+    //    _tableView.footer.automaticallyHidden = NO;
     
     [self.tableView addSubview:self.noRecordView];
     
@@ -200,25 +226,25 @@ static NSString *cellID = @"recordCell";
     
     
     //添加下拉刷新
-//    _tableView.header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
-//        _tableView.footer.hidden = NO;
-//        self.page = 1;
-//        [_tableView.header beginRefreshing];
-//        
-//        [self setRequestData];
-//    }];
-//    _tableView.footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
-//        
-//        self.page++;
-//        if ([self.totalCount intValue] >= self.page) {
-//            [_tableView.footer beginRefreshing];
-//            [self setRequestData];
-//        } else {
-//            [_tableView.footer endRefreshing];
-//            _tableView.footer.hidden = YES;
-//            [self showMsg:showMessageNOData];
-//        }
-//    }];
+    //    _tableView.header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+    //        _tableView.footer.hidden = NO;
+    //        self.page = 1;
+    //        [_tableView.header beginRefreshing];
+    //
+    //        [self setRequestData];
+    //    }];
+    //    _tableView.footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+    //
+    //        self.page++;
+    //        if ([self.totalCount intValue] >= self.page) {
+    //            [_tableView.footer beginRefreshing];
+    //            [self setRequestData];
+    //        } else {
+    //            [_tableView.footer endRefreshing];
+    //            _tableView.footer.hidden = YES;
+    //            [self showMsg:showMessageNOData];
+    //        }
+    //    }];
 }
 
 -(void)addFooter{
@@ -226,8 +252,8 @@ static NSString *cellID = @"recordCell";
     footer.scrollView = _tableView;
     footer.beginRefreshingBlock = ^(MJRefreshBaseView *refreshView) {
         //  后台执行：
-//        [self requestFresh];
-    
+        //        [self requestFresh];
+        
         self.page++;
         if ([self.totalCount intValue] >= self.page) {
             [self setRequestData];
@@ -235,7 +261,7 @@ static NSString *cellID = @"recordCell";
             [self endRefresh];
             [self showMsg:showMessageNOData];
         }
-
+        
     };
     _footer = footer;
 }
@@ -259,7 +285,7 @@ static NSString *cellID = @"recordCell";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.dataArray.count;
-//    return 100;
+    //    return 100;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -270,6 +296,25 @@ static NSString *cellID = @"recordCell";
     cell.recordType = self.recordType;
     cell.topUpModel = (CJTopUpModel *)self.dataArray[indexPath.row];
     return cell;
+}
+
+-  (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([self.recordType isEqualToString:@"0"]) {
+        CJTopUpDetailsViewController *DVC = [[CJTopUpDetailsViewController alloc] init];
+        DVC.topUpDetailsModel = self.dataArray[indexPath.row];
+        DVC.comeHereStr = @"充值记录";
+        [self.navigationController pushViewController:DVC animated:YES];
+    } else if ([self.recordType isEqualToString:@"1"]) {
+        CJCashDetailsViewController *CDVC = [[CJCashDetailsViewController alloc] init];
+        CDVC.cashTopUpModel = self.dataArray[indexPath.row];
+        CDVC.txTemplate3 = self.txTemplate3;
+        [self.navigationController pushViewController:CDVC animated:YES];
+    }
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+}
+- (void)dealloc {
+    [self chrysanthemumClosed];
 }
 
 @end

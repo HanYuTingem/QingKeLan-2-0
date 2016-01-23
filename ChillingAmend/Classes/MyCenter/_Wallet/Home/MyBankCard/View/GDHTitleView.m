@@ -24,7 +24,7 @@ static UILabel *title;
         name.font = [UIFont boldSystemFontOfSize:16];
         [self addSubview:name];
         
-        //NSLog(@"%f",[GCUtil widthOfString:message withFont:14].width);
+        NSLog(@"%f",[GCUtil widthOfString:message withFont:14]);
         if ([GCUtil widthOfString:message withFont:14] > 162) {
              title = [[UILabel alloc] initWithFrame:CGRectMake(20, CGRectGetMaxY(name.frame)+8,  self.frame.size.width - 40, 40)];
         }else
@@ -54,7 +54,7 @@ static UILabel *title;
         
         
         UIView *line2 = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(CancelButton.frame)-0.5, CancelButton.frame.origin.y, 0.5, CancelButton.frame.size.height)];
-        line2.backgroundColor = [UIColor lightGrayColor];
+        line2.backgroundColor = walletLineBackGRD;
         [self addSubview:line2];
         UIButton *ReleaseBound = [UIButton buttonWithType:UIButtonTypeCustom];
         ReleaseBound.frame = CGRectMake(self.frame.size.width / 2, CGRectGetMaxY(line.frame), self.frame.size.width / 2, 44);

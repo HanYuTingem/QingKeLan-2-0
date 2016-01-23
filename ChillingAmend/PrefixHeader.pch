@@ -24,6 +24,7 @@
 #import "ZHLoginInfoManager.h"
 #import "Reachability.h"
 #import "MBProgressHUD.h"
+#import "LaoYiLaoMacro.h"
 
 /** 网络判断提示语 */
 #define WIFI @"正在使用Wifi"
@@ -35,6 +36,9 @@
 #import "GCUtil.h"
 #import "SINOAFNetWorking.h"
 #import "WalletRequsetHttp.h"
+#import "QBColorHeader.h"
+#import "QBFontHeader.h"
+
 
 //------------------
 #define SP_WIDTH [UIScreen mainScreen].bounds.size.width/320

@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CJCashViewController">
             <connections>
                 <outlet property="bankCardTableView" destination="QMV-qN-Cmk" id="N7c-9U-d5q"/>
                 <outlet property="bankCardTableViewH" destination="EOk-bA-Vmh" id="0zm-xk-nDk"/>
+                <outlet property="blackLabelShow" destination="Fzk-zc-HTG" id="d3x-kY-LQe"/>
                 <outlet property="jieJiImage" destination="G1r-Uc-Y4C" id="62e-n3-Nee"/>
                 <outlet property="jumpSubView" destination="lQa-Yh-6as" id="v3I-pX-4QX"/>
                 <outlet property="jumpSubViewH" destination="0za-MJ-8u9" id="wPs-zg-mh5"/>
                 <outlet property="jumpView" destination="w3u-xs-lxu" id="geM-LF-vbZ"/>
                 <outlet property="moneyTextField" destination="IOm-bE-erw" id="KGP-dG-BeC"/>
                 <outlet property="payLabel" destination="v2b-S7-DD6" id="e8z-gz-6lY"/>
+                <outlet property="redLabelShow" destination="6X3-hR-1qw" id="fPf-g3-OMI"/>
                 <outlet property="reminderBtn" destination="uaA-8d-615" id="FlY-Mi-3P3"/>
                 <outlet property="reminderLabel" destination="vQ4-dM-eEf" id="FBx-XY-afF"/>
                 <outlet property="reminderView" destination="CH9-tQ-cYD" id="S0u-VJ-G2x"/>
@@ -36,7 +38,7 @@
                     <constraints>
                         <constraint firstAttribute="height" constant="44" id="3hs-SS-jWJ"/>
                     </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
                     <state key="normal" title="确认提现">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -45,9 +47,21 @@
                         <action selector="toCashBtnClick:" destination="-1" eventType="touchUpInside" id="pIl-Cf-I9a"/>
                     </connections>
                 </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="每天上限3笔，单笔最高5万 7—15个工作日到账" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fzk-zc-HTG">
-                    <rect key="frame" x="15" y="180" width="290" height="30"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="低于50元需付手续费1元" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6X3-hR-1qw">
+                    <rect key="frame" x="15" y="180" width="290" height="15"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="15" id="QW8-wW-r7l"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" red="0.79607843140000001" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="每天上限3笔，单笔最高5万 7—15个工作日到账" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fzk-zc-HTG">
+                    <rect key="frame" x="15" y="195" width="290" height="30"/>
                     <animations/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="KjK-mw-Twy"/>
+                    </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <color key="textColor" red="0.45490196078431372" green="0.45490196078431372" blue="0.45490196078431372" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
@@ -61,7 +75,7 @@
                         <constraint firstAttribute="width" constant="120" id="QnG-ma-Pbo"/>
                     </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ELE-nu-2r4">
@@ -362,19 +376,17 @@
                                         <constraint firstAttribute="height" constant="0.5" id="dA7-gb-FDF"/>
                                     </constraints>
                                 </view>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uaA-8d-615">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uaA-8d-615">
                                     <rect key="frame" x="0.0" y="138" width="270" height="42"/>
                                     <animations/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="42" id="AXf-oH-Ipz"/>
                                     </constraints>
                                     <state key="normal" title="确定">
-                                        <color key="titleColor" red="0.16470588235294117" green="0.16470588235294117" blue="0.16470588235294117" alpha="1" colorSpace="calibratedRGB"/>
-                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="titleColor" red="0.1647058824" green="0.1647058824" blue="0.1647058824" alpha="1" colorSpace="calibratedRGB"/>
                                     </state>
                                     <state key="highlighted" title="确定" backgroundImage="nav-btn-search-selected.png">
-                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="titleColor" red="0.1647058824" green="0.1647058824" blue="0.1647058824" alpha="1" colorSpace="calibratedRGB"/>
                                     </state>
                                     <connections>
                                         <action selector="reminderBtnClick:" destination="-1" eventType="touchUpInside" id="0fF-xB-j9l"/>
@@ -415,6 +427,7 @@
             <animations/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="Z0e-CA-vDj" secondAttribute="trailing" constant="30" id="2RS-pb-598"/>
+                <constraint firstItem="Fzk-zc-HTG" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="7y2-v2-DrP"/>
                 <constraint firstItem="o7c-R3-Dkg" firstAttribute="top" secondItem="ELE-nu-2r4" secondAttribute="bottom" constant="12" id="AHV-gX-kLm"/>
                 <constraint firstAttribute="trailing" secondItem="o7c-R3-Dkg" secondAttribute="trailing" id="AII-fq-xBZ"/>
                 <constraint firstItem="w3u-xs-lxu" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Ao0-vV-fRo"/>
@@ -422,13 +435,18 @@
                 <constraint firstItem="Z0e-CA-vDj" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="30" id="FEd-CS-S5h"/>
                 <constraint firstItem="lRN-bG-I1l" firstAttribute="top" secondItem="o7c-R3-Dkg" secondAttribute="bottom" constant="60" id="KZD-Ss-LHm"/>
                 <constraint firstItem="ELE-nu-2r4" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="QNo-gC-RpH"/>
+                <constraint firstItem="Fzk-zc-HTG" firstAttribute="top" secondItem="6X3-hR-1qw" secondAttribute="bottom" id="RoC-op-fl0"/>
                 <constraint firstAttribute="trailing" secondItem="w3u-xs-lxu" secondAttribute="trailing" id="T9S-e2-KOd"/>
+                <constraint firstAttribute="trailing" secondItem="Fzk-zc-HTG" secondAttribute="trailing" constant="15" id="UzD-A1-Yig"/>
                 <constraint firstAttribute="bottom" secondItem="w3u-xs-lxu" secondAttribute="bottom" id="VJJ-Fr-FYV"/>
                 <constraint firstItem="ELE-nu-2r4" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="76" id="Xho-2Y-OCF"/>
                 <constraint firstAttribute="centerX" secondItem="lRN-bG-I1l" secondAttribute="centerX" id="Zp9-a5-TGl"/>
+                <constraint firstItem="6X3-hR-1qw" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="alT-F8-oq3"/>
                 <constraint firstAttribute="bottom" secondItem="Z0e-CA-vDj" secondAttribute="bottom" constant="44" id="bW7-aP-8pq"/>
                 <constraint firstItem="w3u-xs-lxu" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="lR9-D3-J4Q"/>
                 <constraint firstItem="o7c-R3-Dkg" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="mum-vA-O7T"/>
+                <constraint firstItem="6X3-hR-1qw" firstAttribute="top" secondItem="o7c-R3-Dkg" secondAttribute="bottom" constant="8" id="u4H-dj-Oxw"/>
+                <constraint firstAttribute="trailing" secondItem="6X3-hR-1qw" secondAttribute="trailing" constant="15" id="wDg-9A-30D"/>
             </constraints>
             <point key="canvasLocation" x="414" y="284"/>
         </view>
@@ -437,4 +455,9 @@
         <image name="content_btn_more.png" width="8" height="13"/>
         <image name="nav-btn-search-selected.png" width="160" height="38"/>
     </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
 </document>

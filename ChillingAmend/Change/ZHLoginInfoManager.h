@@ -25,11 +25,11 @@
 
 
 //Php登陆正式接口 不同app接口不同需要更改
-#define WZHLogingPHPWithUrl @"http://qkl.sinosns.cn/app/"
+//#define WZHLogingPHPWithUrl @"http://qkl.sinosns.cn/app/"
 
 
 //Php登陆测试接口 不同app接口不同需要更改
-//#define WZHLogingPHPWithUrl @"http://192.168.10.11:2019/app/"
+#define WZHLogingPHPWithUrl @"http://192.168.10.11:2019/app/"
 
 
 @interface ZHLoginInfoManager : NSObject
@@ -52,4 +52,11 @@
  *  清除缓存并标记退出登陆
  */
 + (void)removeCacheAndOutLogin;
+/**
+ *  为捞一捞模块保存Java登陆信息 (用户中心的登陆)
+ *
+ *  @param userId Java登陆的userID
+ *  @param phone  Java登陆的phone
+ */
++ (void)saveLoginInforWithUserId:(NSString *)userId andPhone:(NSString *)phone;
 @end

@@ -18,7 +18,7 @@
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         
         UIView *upLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, 0.5)];
-        upLine.backgroundColor = WalletHomeBackGRD;
+        upLine.backgroundColor = walletLineBackGRD;
         [self.contentView addSubview:upLine];
         self.upLine = upLine;
         
@@ -45,7 +45,7 @@
         
         
         UIView *line  = [[UIView alloc] initWithFrame:CGRectMake(0, self.contentView.frame.size.height - 0.5, ScreenWidth, 0.5)];
-        line.backgroundColor = WalletHomeBackGRD;
+        line.backgroundColor = walletLineBackGRD;
         self.donwLine = line;
         [self.contentView addSubview:line];
     }

@@ -27,7 +27,7 @@
         [self addSubview:_pay];
         
         UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height / 2 -0.5, self.frame.size.width, 0.5)];
-        line.backgroundColor = [UIColor lightGrayColor];
+        line.backgroundColor =walletLineBackGRD;
         [self addSubview:line];
         
         _Inhome = [UIButton buttonWithType:UIButtonTypeRoundedRect];

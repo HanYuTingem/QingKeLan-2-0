@@ -25,13 +25,14 @@
 #import "LSYSeckillingListViewController.h"
 #import "MobClick.h"
 #import "ZXYCommitOrderRequestModel.h"
+#import "WXApi.h"
 #define YoumengAppKey @"5644063667e58ef2fc000dc2"
 //5328fbfa56240b9ada067458
 #define FIRST_OPEN_APPLICATION_KEY @"firstOpneTheApplication" //第一次开启应用的key
 
 static AppDelegate *appdelegate;
 
-@interface AppDelegate ()
+@interface AppDelegate ()<WXApiDelegate>
 @property (nonatomic,strong) GS_LogoView* loadingView;
 
 @end
@@ -43,6 +44,25 @@ static AppDelegate *appdelegate;
     
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [WXApi registerApp:WalletXeiXinAppID];
+    [UMSocialConfig hiddenNotInstallPlatforms:@[UMShareToQQ, UMShareToQzone, UMShareToWechatSession, UMShareToWechatTimeline]];
+    
+    [[ZHDataBase sharedDataBase]createDataBase];
+    [[ZHDataBase sharedDataBase]createDumplingInforTable];
+    [[AFNetworkReachabilityManager sharedManager]startMonitoring];
+    //    [LYLTools startMonitoring];
+    [[AFNetworkReachabilityManager sharedManager]setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        if(status == AFNetworkReachabilityStatusNotReachable || status == AFNetworkReachabilityStatusUnknown){
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"netStateChange" object:@"0"];
+            NSLog(@"有网");
+        }else{
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"netStateChange" object:@"1"];
+            NSLog(@"没网");
+        }
+    }];
+    [WXApi registerApp:WalletXeiXinAppID];
+    [self UMShareMethod];
+
     // Override point for customization after application launch.
     // bug日志 THE_DEVELOPMENT_STATUS @"2"//1,为开发状态  2,为测试状态  3,为上线状态
     //    [NdUncaughtExceptionHandler setDefaultHandler];
@@ -148,7 +168,7 @@ static AppDelegate *appdelegate;
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter addObserver:self selector:@selector(networkDidLogin:) name:kJPFNetworkDidSetupNotification object:nil];
     
-    [self judgeFirstLaunch];
+//    [self judgeFirstLaunch];
     if ([GCUtil connectedToNetwork]) {
         [self initializeLoadingView];
     }
@@ -198,38 +218,35 @@ static AppDelegate *appdelegate;
     self.window.rootViewController = self.homeTabBarController;
 }
 
-- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
-{
-    return  [UMSocialSnsService handleOpenURL:url];
-}
-- (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation
-{
-    /*支付宝回调 重要
-     */
-    //跳转支付宝钱包进行支付，需要将支付宝钱包的支付结果回传给SDK
-    if ([url.host isEqualToString:@"safepay"]) {
-        [[AlipaySDK defaultService]
-         processOrderWithPaymentResult:url
-         standbyCallback:^(NSDictionary *resultDic) {
-             NSLog(@"result = %@", resultDic);
-             commitModel = [ZXYCommitOrderRequestModel shareInstance];
-             commitModel.payStatu = resultDic[@"resultStatus"];
-             
-             if ([commitModel.payView isEqual:@"QingKeLanApp"]) {
-                 //商城
-                 [[NSNotificationCenter defaultCenter] postNotificationName:@"judgePayStatu" object:self];
-             }else{
-             }
-             
-         }];
-        return YES;
-    }
-    
-    return  [UMSocialSnsService handleOpenURL:url];
-}
+//- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+//{
+////    return  [UMSocialSnsService handleOpenURL:url];
+//    return [WXApi handleOpenURL:url delegate:self];
+//}
+//- (BOOL)application:(UIApplication *)application
+//            openURL:(NSURL *)url
+//  sourceApplication:(NSString *)sourceApplication
+//         annotation:(id)annotation
+//{
+//    //跳转支付宝钱包进行支付，需要将支付宝钱包的支付结果回传给SDK
+//    if ([url.host isEqualToString:@"safepay"]) {
+//        [[AlipaySDK defaultService]
+//         processOrderWithPaymentResult:url
+//         standbyCallback:^(NSDictionary *resultDic) {
+//             NSLog(@"result = %@", resultDic);
+//             //             commitModel.payStatu = resultDic[@"resultStatus"];
+//             //             [[NSNotificationCenter defaultCenter] postNotificationName:@"judgePayStatu" object:self];
+//             [[NSNotificationCenter defaultCenter] postNotificationName:@"judgePayStatu" object:self userInfo:@{@"resultDic":resultDic}];
+//         }];
+//        return YES;
+//    }else if ([url.host isEqualToString:@"pay"]) {//跳转微信支付
+//        [[NSNotificationCenter defaultCenter] postNotificationName:WeiXinWalletNotification object:nil userInfo:@{@"weixinUrl":url}];
+//        return YES;
+//    }
+//    
+//    //    return  [UMSocialSnsService handleOpenURL:url];
+//    return [UMSocialSnsService handleOpenURL:url wxApiDelegate:self];
+//}
 
 #pragma mark 第一次加载
 - (void)judgeFirstLaunch
@@ -341,6 +358,24 @@ didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
     return appdelegate;
 }
 
+- (UIInterfaceOrientationMask)application:(UIApplication*)application supportedInterfaceOrientationsForWindow:(UIWindow*)window
+{
+    // Get topmost/visible view controller
+    UIViewController* currentViewController = [self topViewController];
+    
+    // Check whether it implements a dummy methods called canRotate
+    if ([currentViewController respondsToSelector:@selector(canRotate)]) {
+        if ([currentViewController performSelector:@selector(canRotate)]) {
+            return UIInterfaceOrientationMaskAllButUpsideDown;
+        }
+        // Unlock landscape view orientations for this view controller
+    }
+    
+    // Only allow portrait (standard behaviour)
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
@@ -373,6 +408,7 @@ didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
     application.applicationIconBadgeNumber = 0;
     [APService setBadge:0];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"shareCallBack" object:@""];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"PaymentFinish" object:@"yes"];
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [MobClick event:@"BecomeActive"];
@@ -495,6 +531,36 @@ fetchCompletionHandler:
 - (UIViewController*)topViewController
 {
     return [self topViewControllerWithRootViewController:[UIApplication sharedApplication].keyWindow.rootViewController];
+}
+
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+    return [WXApi handleOpenURL:url delegate:self];
+}
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation
+{
+    //跳转支付宝钱包进行支付，需要将支付宝钱包的支付结果回传给SDK
+    if ([url.host isEqualToString:@"safepay"]) {
+        [[AlipaySDK defaultService]
+         processOrderWithPaymentResult:url
+         standbyCallback:^(NSDictionary *resultDic) {
+             NSLog(@"result = %@", resultDic);
+             //             commitModel.payStatu = resultDic[@"resultStatus"];
+             //             [[NSNotificationCenter defaultCenter] postNotificationName:@"judgePayStatu" object:self];
+             [[NSNotificationCenter defaultCenter] postNotificationName:@"judgePayStatu" object:self userInfo:@{@"resultDic":resultDic}];
+         }];
+        return YES;
+    }else if ([url.host isEqualToString:@"pay"]) {//跳转微信支付
+        [[NSNotificationCenter defaultCenter] postNotificationName:WeiXinWalletNotification object:nil userInfo:@{@"weixinUrl":url}];
+        return YES;
+    }
+    
+    //    return  [UMSocialSnsService handleOpenURL:url];
+    return [UMSocialSnsService handleOpenURL:url wxApiDelegate:self];
 }
 
 - (UIViewController*)topViewControllerWithRootViewController:(UIViewController*)rootViewController

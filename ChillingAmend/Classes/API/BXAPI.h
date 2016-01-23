@@ -15,11 +15,11 @@
 //#define CHONG_url @"http://192.168.10.11:93/app/"
 //#define img_url @"http://192.168.10.11:93/"
 
-//#define CHONG_url @"http://192.168.10.11:2032/app/"
-//#define img_url @"http://192.168.10.11:2032/"
+#define CHONG_url @"http://192.168.10.11:2032/app/"
+#define img_url @"http://192.168.10.11:2032/"
 
 //#define GAME_URL @"http://192.168.10.11:2005"
-//#define activity_url @"http://192.168.10.11:2032/"
+#define activity_url @"http://192.168.10.11:2032/"
 
 ////线上测试地址
 //#define CHONG_url @"http://php.test.sinosns.cn/app/"
@@ -29,11 +29,11 @@
 //#define activity_url @"http://192.168.10.11:93"
 
 //////线上地址
-#define CHONG_url @"http://qkl.sinosns.cn/app/"
-#define img_url @"http://qkl.sinosns.cn"
+//#define CHONG_url @"http://qkl.sinosns.cn/app/"
+//#define img_url @"http://qkl.sinosns.cn"
 //
 #define GAME_URL @"http://game.sinosns.cn"
-#define activity_url @"http://qkl.sinosns.cn"
+//#define activity_url @"http://qkl.sinosns.cn"
 
 //商城测试地址
 //#define SHANGCHENG_url @"http://192.168.10.11:8013/app_v1.3.0/?"

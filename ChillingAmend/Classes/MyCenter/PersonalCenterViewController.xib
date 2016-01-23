@@ -363,7 +363,7 @@
                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="钱包.png" id="z48-KN-nPA">
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="钱包.png" highlightedImage="0_jiaozi.png" id="z48-KN-nPA">
                                     <rect key="frame" x="16" y="58" width="23" height="23"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <animations/>
@@ -582,6 +582,7 @@
         </view>
     </objects>
     <resources>
+        <image name="0_jiaozi.png" width="123" height="112"/>
         <image name="common_background.png" width="640" height="450"/>
         <image name="content_line.png" width="640" height="2"/>
         <image name="content_line_shang.png" width="640" height="2"/>

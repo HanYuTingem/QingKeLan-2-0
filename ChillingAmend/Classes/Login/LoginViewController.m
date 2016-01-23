@@ -504,71 +504,152 @@
  }
  */
 #pragma mark -- 调用领取接口
+//-(void)loadDataWithNoLoginGetMoney{
+//    
+//    //未登录饺子存储的饺子
+//    NSMutableArray *dumplingInforNoLogingArray = [NSMutableArray arrayWithContentsOfFile:DumplingInforNoLogingPath];
+//    NSMutableArray *dumplingIdArray = [NSMutableArray array];//未登录没有领取的饺子
+//    for (NSDictionary *subDic in dumplingInforNoLogingArray) {
+//        DumplingInforModel *model = [DumplingInforModel dumplingInforModelWithDic:subDic];
+//        [dumplingIdArray addObject:model.resultListModel.dumplingModel.prizeId];
+//    }
+//    if (dumplingIdArray.count > 0) {
+//        NSString *dumplingStr =  [dumplingIdArray componentsJoinedByString:@","];
+//        
+//        
+//        //        [self showHudInView:self.view hint:@"正在领取。。。"];
+//        [LYLAFNetWorking getWithBaseURL:[LYLHttpTool noLogingGetMoneyWithProductCode:ProductCode sysType:SysType sessionValue:SessionValue phone:kkUserName  prizeidList:dumplingStr andUserId:kkUserCenterId] success:^(id json) {
+//            ZHLog(@"%@",json);
+//            //            [self hideHud];
+//            
+//            switch ([[json objectForKey:@"code"] intValue]) {
+//                case 100://领取成功
+//                {
+//                    //                    [self showHint:@"领取成功"];
+//                    NSMutableArray *logingArray = [NSMutableArray arrayWithContentsOfFile:DumplingInforLogingPath];
+//                    if(!logingArray){
+//                        logingArray = [NSMutableArray array];
+//                    }
+//                    [logingArray addObjectsFromArray:dumplingInforNoLogingArray];
+//                    [logingArray writeToFile:DumplingInforLogingPath atomically:YES];//将未登录的饺子存为已登陆的
+//                    
+//                    /**
+//                     *  更给储存未登陆的饺子信息
+//                     */
+//                    [dumplingInforNoLogingArray removeAllObjects];
+//                    [dumplingInforNoLogingArray writeToFile:DumplingInforNoLogingPath atomically:YES];
+//                    //promptView.InTheFormOfInt = 1;
+//                    //promptView.hidden = NO;
+//                }
+//                    break;
+//                case 101:
+//                {
+//                    //                    [Tools showInfoAlert:@"系统错误"];
+//                }
+//                    break;
+//                case 102:
+//                {
+//                    //                    [Tools showInfoAlert:@"领取失败，可以换个手机号领取"];
+//                }
+//                    break;
+//                case 103:
+//                {
+//                    
+//                    //                    [Tools showInfoAlert:@"登陆失败"];
+//                }
+//                    break;
+//                case 104:
+//                {
+//                    [dumplingInforNoLogingArray removeAllObjects];
+//                    [dumplingInforNoLogingArray writeToFile:DumplingInforNoLogingPath atomically:YES];
+//                    //                    [Tools showInfoAlert:@"饺子已过期"];
+//                }
+//                    break;
+//                case 105:{
+//                    [dumplingInforNoLogingArray removeAllObjects];
+//                    [dumplingInforNoLogingArray writeToFile:DumplingInforNoLogingPath atomically:YES];
+//                    //                    [Tools showInfoAlert:@"饺子已被领取"];
+//                }
+//                    break;
+//                    
+//                case 106:
+//                {
+//                    //                [Tools showInfoAlert:@"参数不正确"];
+//                }
+//                    break;
+//                case 107:
+//                case 108:
+//                case 109:{
+//                    [dumplingInforNoLogingArray removeAllObjects];
+//                    [dumplingInforNoLogingArray writeToFile:DumplingInforNoLogingPath atomically:YES];
+//                    //                    [Tools showInfoAlert:@"饺子信息无效"];
+//                }
+//                    break;
+//                default:
+//                    break;
+//            }
+//            promptView.InTheFormOfInt = 1;
+//            promptView.hidden = NO;
+//            [[NoGetMoneyView shareGetMoneyView] refreshShareGetMoneyView];//刷新捞一捞界面未领取金额的数据
+//            
+//        } failure:^(NSError *error) {
+//            ZHLog(@"%@",error);
+//            //            [self hideHud];
+//            promptView.InTheFormOfInt = 1;
+//            promptView.hidden = NO;
+//        }];
+//    }
+//    else {
+//        promptView.InTheFormOfInt = 1;
+//        promptView.hidden = NO;
+//    }
+//    
+//}
+
 -(void)loadDataWithNoLoginGetMoney{
     
     //未登录饺子存储的饺子
-    NSMutableArray *dumplingInforNoLogingArray = [NSMutableArray arrayWithContentsOfFile:DumplingInforNoLogingPath];
-    NSMutableArray *dumplingIdArray = [NSMutableArray array];//未登录没有领取的饺子
-    for (NSDictionary *subDic in dumplingInforNoLogingArray) {
-        DumplingInforModel *model = [DumplingInforModel dumplingInforModelWithDic:subDic];
-        [dumplingIdArray addObject:model.resultListModel.dumplingModel.prizeId];
-    }
-    if (dumplingIdArray.count > 0) {
+    NSMutableArray *dumplingIdArray = [LYLTools noGetMeoneyWithReturnDumplingId];//未登录没有领取的饺子
+    if(dumplingIdArray.count > 0){
         NSString *dumplingStr =  [dumplingIdArray componentsJoinedByString:@","];
-        
-        
-        //        [self showHudInView:self.view hint:@"正在领取。。。"];
-        [LYLAFNetWorking getWithBaseURL:[LYLHttpTool noLogingGetMoneyWithProductCode:ProductCode sysType:SysType sessionValue:SessionValue phone:kkUserName  prizeidList:dumplingStr andUserId:kkUserCenterId] success:^(id json) {
+        //[self showHudInView:self.view hint:@"正在领取。。。"];
+        [LYLAFNetWorking getWithBaseURL:[LYLHttpTool noLogingGetMoneyWithProductCode:ProductCode sysType:SysType sessionValue:SessionValue phone:MyObjectForKey(LoginPhoneKey)  prizeidList:dumplingStr andUserId:MyObjectForKey(UserIDKey)] success:^(id json) {
             ZHLog(@"%@",json);
-            //            [self hideHud];
+            [self hideHud];
             
             switch ([[json objectForKey:@"code"] intValue]) {
                 case 100://领取成功
                 {
-                    //                    [self showHint:@"领取成功"];
-                    NSMutableArray *logingArray = [NSMutableArray arrayWithContentsOfFile:DumplingInforLogingPath];
-                    if(!logingArray){
-                        logingArray = [NSMutableArray array];
-                    }
-                    [logingArray addObjectsFromArray:dumplingInforNoLogingArray];
-                    [logingArray writeToFile:DumplingInforLogingPath atomically:YES];//将未登录的饺子存为已登陆的
-                    
-                    /**
-                     *  更给储存未登陆的饺子信息
-                     */
-                    [dumplingInforNoLogingArray removeAllObjects];
-                    [dumplingInforNoLogingArray writeToFile:DumplingInforNoLogingPath atomically:YES];
-                    //promptView.InTheFormOfInt = 1;
-                    //promptView.hidden = NO;
+                    [self showHint:@"领取成功"];
+                    [[ZHDataBase sharedDataBase]upDataWithNoLogingFromlogingState:@"0" toLogingState:@"1" andUserId:LYLUserId];
                 }
                     break;
                 case 101:
                 {
-                    //                    [Tools showInfoAlert:@"系统错误"];
+                    // [LYLTools showInfoAlert:@"系统错误"];
                 }
                     break;
                 case 102:
                 {
-                    //                    [Tools showInfoAlert:@"领取失败，可以换个手机号领取"];
+                    // [LYLTools showInfoAlert:@"领取失败，可以换个手机号领取"];
                 }
                     break;
                 case 103:
                 {
-                    
-                    //                    [Tools showInfoAlert:@"登陆失败"];
+                    [[ZHDataBase sharedDataBase]deleWithLogingState:@"0"];
+                    // [LYLTools showInfoAlert:@"登陆失败"];
                 }
                     break;
                 case 104:
                 {
-                    [dumplingInforNoLogingArray removeAllObjects];
-                    [dumplingInforNoLogingArray writeToFile:DumplingInforNoLogingPath atomically:YES];
-                    //                    [Tools showInfoAlert:@"饺子已过期"];
+                    [[ZHDataBase sharedDataBase]deleWithLogingState:@"0"];
+                    // [LYLTools showInfoAlert:@"饺子已过期"];
                 }
                     break;
                 case 105:{
-                    [dumplingInforNoLogingArray removeAllObjects];
-                    [dumplingInforNoLogingArray writeToFile:DumplingInforNoLogingPath atomically:YES];
-                    //                    [Tools showInfoAlert:@"饺子已被领取"];
+                    [[ZHDataBase sharedDataBase]deleWithLogingState:@"0"];
+                    
+                    // [LYLTools showInfoAlert:@"饺子已被领取"];
                 }
                     break;
                     
@@ -580,30 +661,21 @@
                 case 107:
                 case 108:
                 case 109:{
-                    [dumplingInforNoLogingArray removeAllObjects];
-                    [dumplingInforNoLogingArray writeToFile:DumplingInforNoLogingPath atomically:YES];
-                    //                    [Tools showInfoAlert:@"饺子信息无效"];
+                    [[ZHDataBase sharedDataBase]deleWithLogingState:@"0"];
+                    // [LYLTools showInfoAlert:@"饺子信息无效"];
                 }
                     break;
                 default:
                     break;
             }
-            promptView.InTheFormOfInt = 1;
-            promptView.hidden = NO;
-            [[NoGetMoneyView shareGetMoneyView] refreshShareGetMoneyView];//刷新捞一捞界面未领取金额的数据
             
         } failure:^(NSError *error) {
             ZHLog(@"%@",error);
-            //            [self hideHud];
-            promptView.InTheFormOfInt = 1;
-            promptView.hidden = NO;
+            [self hideHud];
+            
         }];
     }
-    else {
-        promptView.InTheFormOfInt = 1;
-        promptView.hidden = NO;
-    }
-    
+    promptView.InTheFormOfInt = 1;
+    promptView.hidden = NO;
 }
-
 @end

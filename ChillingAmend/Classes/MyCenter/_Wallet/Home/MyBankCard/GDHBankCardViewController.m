@@ -13,6 +13,7 @@
 @interface GDHBankCardViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     UITableView *_tableView;
+//    UIView *lineUp;
 }
 @property(nonatomic,strong)NSMutableArray *bankArray;
 
@@ -55,13 +56,13 @@
 }
 
 -(void)makeNav{
-    self.backView.backgroundColor = WalletHomeNAVGRD
+//    self.backView.backgroundColor = WalletHomeNAVGRD
     self.mallTitleLabel.text  = @"我的银行卡";
-    self.mallTitleLabel.textColor = [UIColor whiteColor];
+//    self.mallTitleLabel.textColor = [UIColor whiteColor];
 
     
-    self.mallTitleLabel.font = WalletHomeNAVTitleFont
-    [self.leftBackButton setImage:[UIImage imageNamed:@"title_btn_back02"] forState:UIControlStateNormal];
+//    self.mallTitleLabel.font = WalletHomeNAVTitleFont
+//    [self.leftBackButton setImage:[UIImage imageNamed:@"title_btn_back"] forState:UIControlStateNormal];
     mainView.backgroundColor = [UIColor whiteColor];
 }
 /** 1112. 获取用户银行卡列表 */
@@ -78,6 +79,7 @@
             NSArray *myBankArray = dict[@"rs"];
             
             if (myBankArray.count) {
+//                [lineUp removeFromSuperview];
                 for (NSDictionary *dic in myBankArray) {
                     GDHBankModel *model = [[GDHBankModel alloc] initWithDic:dic];
                     [self.bankArray addObject:model];
@@ -109,6 +111,9 @@
     _tableView.separatorStyle = UITableViewCellSelectionStyleNone;
     _tableView.backgroundColor = [UIColor colorWithRed:0.96f green:0.96f blue:0.96f alpha:1.00f];
     [self.view addSubview:_tableView];
+   UIView *upline =  [[UIView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, 0.5)];
+    upline.backgroundColor = walletLineBackGRD;
+    _tableView.tableHeaderView = upline;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -134,7 +139,7 @@
     UIView *footView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, 44)];
     footView.backgroundColor = [UIColor whiteColor];
     
-//    UIView *lineUp  =[[UIView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, 0.5)];
+//     lineUp  =[[UIView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, 0.5)];
 //    lineUp.backgroundColor = [UIColor lightGrayColor];
 //    [footView addSubview:lineUp];
     UIButton *footButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -148,7 +153,7 @@
     footButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 210*WalletSP_Width);
     [footButton  addTarget:self action:@selector(addBlank:) forControlEvents:UIControlEventTouchUpInside];
     UIView *line  =[[UIView alloc] initWithFrame:CGRectMake(0, 43.5, ScreenWidth, 0.5)];
-    line.backgroundColor = [UIColor lightGrayColor];
+    line.backgroundColor = walletLineBackGRD;
     [footView addSubview:footButton];
     [footView addSubview:line];
     
@@ -181,14 +186,11 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     return 44;
 }
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)dealloc
+{
+    [self chrysanthemumClosed];
 }
-*/
+
 
 @end

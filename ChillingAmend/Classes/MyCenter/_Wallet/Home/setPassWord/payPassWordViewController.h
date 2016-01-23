@@ -14,7 +14,13 @@
 /** 确定按钮事件 */
 - (IBAction)confirmButtonAction:(id)sender;
 
-
+/** 修改支付密码 */
 @property (nonatomic,copy) NSString *changePassWord;
+
+/** 未设置密码，提现，设置了密码后返回提现界面  */
+@property (nonatomic,copy) NSString *fromVcToSetPassWord;
+
+// 捞一捞push过来
+@property (nonatomic,copy) NSString *LYLpayPushtoSetpassWord;
 
 @end

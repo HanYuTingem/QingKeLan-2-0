@@ -46,7 +46,10 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *bankImageVIww;
 @property (weak, nonatomic) IBOutlet UILabel *theNameTitle;
+/** 下拉箭头 */
 
+@property (weak, nonatomic) IBOutlet UIButton *selectButton;
+- (IBAction)selectButtonDown:(id)sender;
 
 /**  从银行卡列表传过来 */
 @property (nonatomic,copy) NSString *theBank;

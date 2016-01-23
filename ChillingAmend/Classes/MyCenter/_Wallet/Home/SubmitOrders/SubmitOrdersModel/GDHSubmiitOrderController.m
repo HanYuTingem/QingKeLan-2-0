@@ -100,7 +100,7 @@ static int number = 4;
     [self.view addSubview:self.ifCancelPayButton];
     [self makeNav];
     
-    CJPayJudgeView *payJudgeView = [CJPayJudgeView shareCJPayJudgeViewWithController:self];
+    CJPayJudgeView *payJudgeView = [CJPayJudgeView shareCJPayJudgeViewWithController:self withRequestStr:@""];
     payJudgeView.delegate = self;
     
 #if 1  //提现 密码逻辑判断
@@ -151,10 +151,10 @@ static int number = 4;
 
 /** 设置导航 */
 -(void)makeNav{
-    self.backView.backgroundColor = WalletHomeNAVGRD
-    self.mallTitleLabel.textColor = [UIColor whiteColor];
-    self.mallTitleLabel.font = WalletHomeNAVTitleFont
-    [self.leftBackButton setImage:[UIImage imageNamed:@"title_btn_back02"] forState:UIControlStateNormal];
+//    self.backView.backgroundColor = WalletHomeNAVGRD
+//    self.mallTitleLabel.textColor = [UIColor whiteColor];
+//    self.mallTitleLabel.font = WalletHomeNAVTitleFont
+//    [self.leftBackButton setImage:[UIImage imageNamed:@"title_btn_back"] forState:UIControlStateNormal];
     mainView.backgroundColor = [UIColor colorWithRed:0.96f green:0.96f blue:0.96f alpha:1.00f];
     
 }
@@ -162,5 +162,11 @@ static int number = 4;
     [self.view endEditing:YES];
     btn.hidden=  NO;
 }
+
+- (void)dealloc
+{
+    [self chrysanthemumClosed];
+}
+
 
 @end

@@ -16,8 +16,7 @@
 //}
 
 -(void)setJianPanDelegate:(id<SINOUIkeyboardViewDelegate>)jianPanDelegate{
-    
-        [self setInputView:[[[SINOUIkeyboardView alloc] init] keyboardViewDelegate:jianPanDelegate text:self]];
+    [self setInputView:[[[SINOUIkeyboardView alloc] init] keyboardViewDelegate:jianPanDelegate text:self]];
 }
 
 -(void)setJianPanDelegateManagerInstance:(id<SINOUIkeyboardViewDelegate>)jianPanDelegate{

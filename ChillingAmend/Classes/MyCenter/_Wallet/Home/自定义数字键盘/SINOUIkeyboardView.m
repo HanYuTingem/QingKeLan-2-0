@@ -75,7 +75,7 @@
                 [btn setTag:[numArray[9] integerValue]];
             }else{
                 btn.tag = 0;
-            }            
+            }
         }
         else
         {
@@ -101,7 +101,7 @@
                     
                 }else if (self.keyboardLowerLeftButtonType == KeyboardLowerLeftButtonDecimalPoint){
                     [btn setTitle:@"." forState:UIControlStateNormal];
-
+                    
                 }else{
                     [btn setUserInteractionEnabled:NO];
                 }
@@ -111,7 +111,7 @@
                 if (self.lowerRightButtonTextTitle) {
                     [btn setTitle:self.lowerRightButtonTextTitle forState:UIControlStateNormal];
                 }else{
-//                    [btn setTitle:@"删除" forState:UIControlStateNormal];
+                    //                    [btn setTitle:@"删除" forState:UIControlStateNormal];
                 }
                 [[SINOUIkeyboardView sharedView] rightButtonBackground:btn];
                 
@@ -242,11 +242,11 @@
 /** 点击数字button的代理 */
 - (void)keyboardClickNumberCurrentNum:(NSString *)buttonTag text:(UITextField *)textField{
     if (self.delegate != nil && [self.delegate respondsToSelector:@selector(keyboardClickNumbertext:textStr:)]) {
-//        if (textStr.length > 0) {
-//            textStr = [NSString stringWithFormat:@"%@%@",textStr,buttonTag];
-//        }else{
-            textStr = [NSString stringWithFormat:@"%@",buttonTag];
-//        }
+        //        if (textStr.length > 0) {
+        //            textStr = [NSString stringWithFormat:@"%@%@",textStr,buttonTag];
+        //        }else{
+        textStr = [NSString stringWithFormat:@"%@",buttonTag];
+        //        }
         
         if ([self.delegate keyboardClickNumbertext:textField textStr:textStr] == YES) {
             strTextField.text = textStr;

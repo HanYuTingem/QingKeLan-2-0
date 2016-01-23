@@ -32,7 +32,6 @@
         [self.leftButton setImage:[UIImage imageNamed:@"content_ico_personal_01"] forState:UIControlStateNormal];
         self.leftButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 10);
         self.leftButton.layer.cornerRadius=0.5;
-
         [self.leftButton setTitleColor: [UIColor colorWithRed:0.22f green:0.22f blue:0.22f alpha:1.00f] forState:UIControlStateNormal];
         /**  注释： 先不删除 */
 //        [self.leftButton setBackgroundImage: [UIImage imageNamed:@"nav-btn-search-selected"] forState:UIControlStateSelected];
@@ -48,15 +47,14 @@
         self.rightButton.frame = CGRectMake(ScreenWidth/2, 0.5, ScreenWidth/2, 37-0.5);
         self.rightButton.titleLabel.font = [UIFont systemFontOfSize:13];
         self.rightButton.layer.cornerRadius=0.5;
-
         [self.rightButton setTitleColor:[UIColor colorWithRed:0.22f green:0.22f blue:0.22f alpha:1.00f] forState:UIControlStateNormal];
         [self.rightButton setTitle:@"提现" forState:UIControlStateNormal];
         [self.rightButton setImage:[UIImage imageNamed:@"content_ico_personal_02"] forState:UIControlStateNormal];
-        [self.rightButton setBackgroundImage: [UIImage imageNamed:@"nav-btn-search-selected"] forState:UIControlStateSelected];
+        [self.rightButton setBackgroundImage: [UIImage imageNamed:@"nav-btn-search-selected"] forState:UIControlStateHighlighted];
 
         self.rightButton.titleEdgeInsets= UIEdgeInsetsMake(0, 10, 0, 0);
         [self.contentView addSubview:self.rightButton];
-        [self.rightButton addTarget:self action:@selector(rightDown:) forControlEvents:UIControlEventTouchUpInside];
+        [self.rightButton addTarget:self action:@selector(rightDown:) forControlEvents:UIControlEventTouchDown];
         
 //        
 //        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 37 - 0.5, ScreenWidth, 0.5)];
@@ -77,7 +75,8 @@
 /** 提现 */
 -(void)rightDown:(UIButton *)rightDown{
     NSLog(@"提现");
-    rightDown.selected = YES;
+//    self.rightButton.backgroundColor = [UIColor redColor];
+//    rightDown.selected = YES;
     self.WithdrawalsBlock(rightDown);
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

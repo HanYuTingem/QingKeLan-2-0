@@ -76,8 +76,8 @@
     UIImage *shareImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:imageUrl]];
     self.shareImageName = shareImage;
     self.shareDelegate = self;
-//    [self callOutShareViewWithUseController:self andSharedUrl:[NSString stringWithFormat:@"%@",self.urlStr]];
-    [self callOutShareViewWithUseController:self andSharedUrl:[NSString stringWithFormat:@"%@",@"http://qkl.sinosns.cn/"]];
+    [self callOutShareViewWithUseController:self andSharedUrl:[NSString stringWithFormat:@"%@",self.urlStr]];
+//    [self callOutShareViewWithUseController:self andSharedUrl:[NSString stringWithFormat:@"%@",@"http://qkl.sinosns.cn/"]];
 }
 
 - (void)shareSuccess

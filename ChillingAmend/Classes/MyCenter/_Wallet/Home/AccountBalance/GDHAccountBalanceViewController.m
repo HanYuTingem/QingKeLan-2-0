@@ -15,7 +15,6 @@
 #import "GDHRsModel.h"
 #import "MJRefresh.h"
 #import "LaoYiLaoViewController.h"
-
 #import "GDHNoMoneyView.h"
 @interface GDHAccountBalanceViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -64,37 +63,40 @@
     button.titleLabel.font = [UIFont boldSystemFontOfSize:14];
     [button setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     [button setTitle:AccountBalanceTitle forState:UIControlStateNormal];
-    
-    [button addTarget:self action:@selector(jinrulaoyilao:) forControlEvents:UIControlEventTouchUpInside];
-    
+//    [button addTarget:self action:@selector(LYLButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
+    [button addTarget:self action:@selector(accountBalance:) forControlEvents:UIControlEventTouchUpInside];
     [self makeNav];
     [self makeTableView];
     [self payIncome];
     [self NOMoney];
     [self request1002getAccountBalanceDetail];
 }
-#define mark --进入捞饺子
-- (void)jinrulaoyilao:(UIButton *)btn{
-    for(UIViewController *subVc  in self.navigationController.viewControllers) {
-        if([subVc isKindOfClass:[LaoYiLaoViewController class]]){
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"popLYLVC" object:nil];
-            [self.navigationController popToViewController:subVc animated:YES];
+#pragma  mark - 捞一捞
+
+-(void)accountBalance:(UIButton *)account{
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"popLYLVC" object:@"-1"];
+    for (UIViewController *subVC in self.navigationController.viewControllers) {
+        if([subVC isKindOfClass:[LaoYiLaoViewController class]]){
+            [self.navigationController popToViewController:subVC animated:YES];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"deleteItem" object:nil];
             return;
         }
     }
-
-    LaoYiLaoViewController *view = [[LaoYiLaoViewController alloc] init];
-    if ([kkUserId isEqualToString:@""] || !kkUserId) {
-        view.userID = @"";
-        view.phone = @"";
-    }else{
-        view.userID = kkUserCenterId;
-        view.phone = kkUserName;
-    }
-    [self.navigationController pushViewController:view animated:YES];
+    
+        LaoYiLaoViewController *laoYILao = [[LaoYiLaoViewController alloc]init];
+        
+        NSDictionary *dic = kkNickDicJava;
+        if ([[dic objectForKey:@"id"] intValue] < 2) {
+            laoYILao.userID = @"";
+            laoYILao.phone = @"";
+        }else{
+            laoYILao.userID = kkUserCenterId;
+            laoYILao.phone =  kkUserName;
+        }
+        [self.navigationController pushViewController:laoYILao animated:YES];
+    
 }
-
 /** 1002获取余额明细列表网络请求 */
 -(void)request1002getAccountBalanceDetail {
     
@@ -210,13 +212,13 @@
 #pragma mark - 设置导航
 /** 设置导航 */
 -(void)makeNav{
-    self.backView.backgroundColor = WalletHomeNAVGRD
+//    self.backView.backgroundColor = WalletHomeNAVGRD
     self.mallTitleLabel.text  = @"余额明细";
-    self.mallTitleLabel.textColor = [UIColor whiteColor];
-    self.mallTitleLabel.font = WalletHomeNAVTitleFont
+//    self.mallTitleLabel.textColor = [UIColor whiteColor];
+//    self.mallTitleLabel.font = WalletHomeNAVTitleFont
     [self.rightButton setImage:[UIImage imageNamed:@"content_spanner_more"] forState:UIControlStateNormal];
     self.rightButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 12);
-    [self.leftBackButton setImage:[UIImage imageNamed:@"title_btn_back02"] forState:UIControlStateNormal];
+//    [self.leftBackButton setImage:[UIImage imageNamed:@"title_btn_back"] forState:UIControlStateNormal];
     mainView.backgroundColor = [UIColor whiteColor];
 }
 
@@ -315,4 +317,10 @@
     [accountCell refreshAccount:(GDHRsModel *)self.dataArray[indexPath.row]];
     return accountCell;
 }
+
+- (void)dealloc
+{
+    [self chrysanthemumClosed];
+}
+
 @end

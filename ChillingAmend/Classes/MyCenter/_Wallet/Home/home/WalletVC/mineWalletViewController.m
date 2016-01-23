@@ -1,4 +1,4 @@
-//
+   //
 //  mineWalletViewController.m
 //  Wallet
 //
@@ -19,14 +19,14 @@
 #import "SBJSON.h"
 #import "GDHPassWordModel.h"
 #import "GDHSetPassWordButton.h"
-//#import "GDHPassWordModel.h"
+#import "GDHPassWordModel.h"
 #import "GDHCardCoupons.h"
 #import "GDHMyWalletModel.h"
-/**  不删除。用于与捞一捞模块交互 */
 #import "LaoYiLaoViewController.h"
+#import "GDHCouponViewController.h"
 static NSString *iden = @"iden";
 
-static int  section = 1;
+static int  section = 2;
 @interface mineWalletViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     UITableView *_tableView ;
@@ -46,38 +46,48 @@ static int  section = 1;
 -(void)viewDidDisappear:(BOOL)animated{
     
     [super viewDidDisappear:animated];
-
+    
     recharge.leftButton.selected = NO;
     recharge.rightButton.selected = NO;
-
+    
 }
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self request1001AccountBalance];
-
+    
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self makeNav];
     [self makeTableView];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(thePassWordSetSuccess) name:@"PASSWORLD" object:nil];
-
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(thePassWordSetSuccess:) name:@"PASSWORLD" object:nil];
+    
 }
 
-/** 添加用于与 捞一捞交互 */
-- (void)backButtonClick{
+/** 设置密码成功 */
+-(void)thePassWordSetSuccess:(NSNotification *)user
+{
     
-    //_backBlock();
+    NSDictionary *dict = [user userInfo];
+    NSString *titleStr = dict[@"Prompt"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self showMsg:titleStr];
+    });
+}
+
+- (void)backButtonClick{
+    NSLog(@"");
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"popLYLVC" object:@"-1"];
+    
     if([_type isEqualToString:@"1"]){
-#warning  不删除 判断，返回按钮是不是从捞一捞页面传过来
-        for (UIViewController *subVc  in self.navigationController.viewControllers) {
+        for (UIViewController *subVc in self.navigationController.viewControllers) {
             if([subVc isKindOfClass:[LaoYiLaoViewController class]]){
                 [self.navigationController popToViewController:subVc animated:YES];
             }
         }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"deleteItem" object:nil];
     }else{
         [self.navigationController popViewControllerAnimated:YES];
-        
     }
 }
 
@@ -91,18 +101,17 @@ static int  section = 1;
 }
 /** 设置导航 */
 -(void)makeNav{
-    self.backView.backgroundColor = WalletHomeNAVGRD
+    //    self.backView.backgroundColor = WalletHomeNAVGRD
     self.mallTitleLabel.text  = @"我的钱包";
-    self.mallTitleLabel.textColor = [UIColor whiteColor];
-    self.mallTitleLabel.font = WalletHomeNAVTitleFont
-    [self.leftBackButton setImage:[UIImage imageNamed:@"title_btn_back02"] forState:UIControlStateNormal];
+    //    self.mallTitleLabel.textColor = [UIColor whiteColor];
+    //    self.mallTitleLabel.font = WalletHomeNAVTitleFont
+    //    [self.leftBackButton setImage:[UIImage imageNamed:@"title_btn_back"] forState:UIControlStateNormal];
     mainView.backgroundColor = [UIColor whiteColor];
     
 }
 /** 钱包个人中心账户余额1001 接口 */
 -(void)request1001AccountBalance{
     [self chrysanthemumOpen];
-
     NSDictionary *dict  = [WalletRequsetHttp WalletPersonAccountBalance1001];
     
     NSString *url = [NSString stringWithFormat:@"%@%@",WalletHttp_Balance,[dict JSONFragment]];
@@ -115,7 +124,7 @@ static int  section = 1;
             NSUserDefaults *userD =[NSUserDefaults standardUserDefaults];
             [userD setObject:walletModel.isHasPass forKey:HasPassWord];
             [userD synchronize];
-
+            
             [self.dataArrary addObject:walletModel];
             [_tableView reloadData];
             NSLog(@"请求成功---------");
@@ -125,17 +134,17 @@ static int  section = 1;
         [self chrysanthemumClosed];
         
         NSLog(@"%@",self.view.subviews);
-     
+        
     } failure:^(NSError *error) {
         
         NSLog(@"%@",error);
         [self showMsg:ShowMessage];
         [self chrysanthemumClosed];
-
+        
     } noNet:^{
         [self chrysanthemumClosed];
     }];
-//
+    //
 }
 /** tableview 创建 */
 -(void)makeTableView{
@@ -153,7 +162,7 @@ static int  section = 1;
     return section;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-
+    
     if (section == 0) {
         return 4;
     }else{
@@ -161,9 +170,9 @@ static int  section = 1;
     }
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-
+    
     if (indexPath.section == 0) {
-
+        
         if (indexPath.row == 0) {
             
             BalanceTableViewCell *balanceCell = [[BalanceTableViewCell alloc] init];
@@ -172,7 +181,7 @@ static int  section = 1;
             if (self.dataArrary.count) {
                 
                 GDHMyWalletModel *model = self.dataArrary[0];
-                [balanceCell makeRefreshUI:model.balance];
+                [balanceCell makeRefreshUI:[NSString stringWithFormat:@"¥%@",model.balance]];
                 self.myBalance = model.balance;
                 if ([model.balanceChange isEqual:@"Y"]) {
                     balanceCell.redPoint.hidden = NO;
@@ -180,13 +189,13 @@ static int  section = 1;
             }
             return balanceCell;
         }else if(indexPath.row == 1){
-           recharge = [[RechargeTableViewCell alloc] init];
+            recharge = [[RechargeTableViewCell alloc] init];
             __weak mineWalletViewController *Temp = self;
             recharge.RechargeBlock = ^(UIButton *recharge){//跳转充值页面
                 //显示提示框
-                [Temp showMsg:@"功能在路上，敬请期待！"];
+                //                [Temp showMsg:@"功能在路上，敬请期待！"];
                 
-#if 0  //充值页面一期暂未开通
+#if 1  //充值页面一期暂未开通
                 CJTopUpViewController *topUp = [[CJTopUpViewController alloc] init];
                 [Temp.navigationController pushViewController:topUp animated:YES];
 #endif
@@ -197,7 +206,7 @@ static int  section = 1;
                 Withdrawals.balance = Temp.myBalance;
                 [Temp.navigationController pushViewController:Withdrawals animated:YES];
             };
-      
+            
             recharge.selectionStyle= UITableViewCellSelectionStyleNone;
             return recharge;
         }else if(indexPath.row == 2){
@@ -206,7 +215,13 @@ static int  section = 1;
             if (self.dataArrary.count) {
                 balance.donwLine.hidden = YES;
                 GDHMyWalletModel *model = self.dataArrary[0];
-                [balance makeRefreshUI:[NSString stringWithFormat:@"%d张",[model.bankCardNum intValue]]];
+                if ([model.bankCardNum intValue] == 0) {
+                    [balance makeRefreshUI:[NSString stringWithFormat:@"未添加"]];
+                    
+                }else{
+                    [balance makeRefreshUI:[NSString stringWithFormat:@"%d张",[model.bankCardNum intValue]]];
+                }
+                
             }
             balance.selectionStyle= UITableViewCellSelectionStyleNone;
             return balance;
@@ -219,11 +234,11 @@ static int  section = 1;
     }else{
         BalanceTableViewCell *balance = [[BalanceTableViewCell alloc] init];
         balance.title.text = @"优惠券";
-        balance.redPoint.hidden = NO;
+        balance.redPoint.hidden = YES;
         CGRect frame = balance.redPoint.frame;
         frame.origin.x -= 15;
         balance.redPoint.frame = frame;
-        [balance makeRefreshUI:@"2"];
+        [balance makeRefreshUI:@""];
         balance.selectionStyle= UITableViewCellSelectionStyleNone;
         return balance;
     }
@@ -254,7 +269,7 @@ static int  section = 1;
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     if (self.dataArrary.count) {
-    GDHMyWalletModel *model = self.dataArrary[0];
+        GDHMyWalletModel *model = self.dataArrary[0];
         if (section == 0 && [model.isHasPass isEqualToString:@"Y"]) {
             return 0;
         }
@@ -274,49 +289,41 @@ static int  section = 1;
             [self.navigationController pushViewController:accountBalance animated:YES];
         }
         if (indexPath.row == 2) {
-
+            
             GDHBankCardViewController *bankcard = [[GDHBankCardViewController alloc] init];
             [self.navigationController pushViewController:bankcard animated:YES];
         }
         if (indexPath.row == 3) {
             if (self.dataArrary.count) {
-            GDHMyWalletModel *model = self.dataArrary[0];
-            NSLog(@"支付密码");
-            if ([model.isHasPass isEqualToString:@"Y"]) {
-                GDHChangePassController *setPassWord = [[GDHChangePassController alloc] init];
-                [self.navigationController pushViewController:setPassWord animated:YES];            } else {
-                    GDHSetPassWordViewController *SPWVC = [[GDHSetPassWordViewController alloc] init];
-                    [self.navigationController pushViewController:SPWVC animated:YES];
-                }
+                GDHMyWalletModel *model = self.dataArrary[0];
+                NSLog(@"支付密码");
+                if ([model.isHasPass isEqualToString:@"Y"]) {
+                    GDHChangePassController *setPassWord = [[GDHChangePassController alloc] init];
+                    [self.navigationController pushViewController:setPassWord animated:YES];            } else {
+                        GDHSetPassWordViewController *SPWVC = [[GDHSetPassWordViewController alloc] init];
+                        [self.navigationController pushViewController:SPWVC animated:YES];
+                    }
             }
         }
     }else{
         if (indexPath.row == 0) {
             //显示提示框
-            [self showMsg:@"功能在路上，敬请期待！"];
+//            [self showMsg:@"功能在路上，敬请期待！"];
+            GDHCouponViewController *vc  = [[GDHCouponViewController alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
         }
     }
 }
--(void)thePassWordSetSuccess
-{
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self showMsg:@"支付密码修改成功"];
-    });
-}
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)dealloc
+{
+    [self chrysanthemumClosed];
 }
-*/
+
+
 
 @end

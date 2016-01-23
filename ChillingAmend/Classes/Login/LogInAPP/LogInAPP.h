@@ -12,16 +12,16 @@
 
 ///*正式*/
 ////php
-#define ADDRESSPHP @"http://qkl.sinosns.cn/app/"
+//#define ADDRESSPHP @"http://qkl.sinosns.cn/app/"
 ////java
-#define ADDRESS @"http://api.ucenter.sinosns.cn/"
+//#define ADDRESS @"http://api.ucenter.sinosns.cn/"
 
 /*测试*/
 //php
 //#define ADDRESSPHP @"http://192.168.10.11:93/app/"
-//#define ADDRESSPHP @"http://192.168.10.11:2032/app/"
+#define ADDRESSPHP @"http://192.168.10.11:2032/app/"
 //java
-//#define ADDRESS @"http://192.168.10.86:8081/sinoCenter/"
+#define ADDRESS @"http://192.168.10.86:8081/sinoCenter/"
 
 //#define ADDRESS @"http://192.168.10.78:8192/sinoCenter/"
 //#define ADDRESS @"http://192.168.10.133:8080/sinoCenter/"

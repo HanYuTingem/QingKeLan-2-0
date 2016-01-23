@@ -19,10 +19,10 @@
     // Do any additional setup after loading the view from its nib.
     self.view.backgroundColor = [UIColor colorWithRed:0.96f green:0.96f blue:0.96f alpha:1.00f];
     self.mallTitleLabel.text = @"帮助";
-    self.mallTitleLabel.font = WalletHomeNAVTitleFont;
-    self.mallTitleLabel.textColor = WalletHomeNAVTitleColor;
-    self.backView.backgroundColor = WalletHomeNAVGRD;
-    [self.leftBackButton setImage:[UIImage imageNamed:@"title_btn_back02"] forState:UIControlStateNormal];
+//    self.mallTitleLabel.font = WalletHomeNAVTitleFont;
+//    self.mallTitleLabel.textColor = WalletHomeNAVTitleColor;
+//    self.backView.backgroundColor = WalletHomeNAVGRD;
+//    [self.leftBackButton setImage:[UIImage imageNamed:@"title_btn_back"] forState:UIControlStateNormal];
     
 }
 

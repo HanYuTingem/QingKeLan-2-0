@@ -24,7 +24,9 @@
 -(void)refresh:(GDHBankModel *)model{
     self.bankLabel.text = [NSString stringWithFormat:@"%@（%@）",model.bankName,[self cardSn:model.cardSn]];
 
+    
     [self.bankImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",walletMybankimh_UrL,model.bankIcon]] placeholderImage:[UIImage imageNamed:@""]];
+    
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];

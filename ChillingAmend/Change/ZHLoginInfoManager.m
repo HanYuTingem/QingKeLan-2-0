@@ -12,30 +12,41 @@
 
 + (void)addSavePHPCacheInLoginWithJson:(id)json{
     ZHLog(@"php登陆信息%@",json);
-
-//    [SaveMessage saveUserMessagePHP:json];
-//    
-//    [kkUserInfo resetInfo:[[NSUserDefaults standardUserDefaults]objectForKey:usernameMessagePHP]];
-//    [BSaveMessage saveUserMessage:[[NSUserDefaults standardUserDefaults]objectForKey:usernameMessagePHP]];
-//    [GCUtil savejifenWithJifen:[[[NSUserDefaults standardUserDefaults]objectForKey:usernameMessagePHP] objectForKey:@"jifen"]];
-}
+    
+    [SaveMessage saveUserMessagePHP:json];
+    
+    [kkUserInfo resetInfo:[[NSUserDefaults standardUserDefaults]objectForKey:usernameMessagePHP]];
+    [BSaveMessage saveUserMessage:[[NSUserDefaults standardUserDefaults]objectForKey:usernameMessagePHP]];
+    [GCUtil saveLajiaobijifenWithJifen:[[[NSUserDefaults standardUserDefaults]objectForKey:usernameMessagePHP] objectForKey:@"jifen"]];}
 
 + (void)addSaveJavaCacheInLoginWithJson:(id)json{
     
-        ZHLog(@"java登陆信息%@",json);
+    NSDictionary *dict = (NSDictionary *)json;
+    NSMutableDictionary *resultDic = [NSMutableDictionary dictionaryWithDictionary:(NSDictionary *)[dict objectForKey:@"result"]];
+    NSArray *arr = [resultDic allKeysForObject:[NSNull null]];
+    [arr enumerateObjectsUsingBlock:^(NSString* obj, NSUInteger idx, BOOL *stop) {
+        [resultDic setObject:@"" forKey:arr[idx]];
+    }];
+    [SaveMessage saveUserMessageJava:resultDic];
 }
 
 
 + (void)removeCacheAndOutLogin{
     MySetObjectForKey(@"", UserIDKey);
     MySetObjectForKey(@"", LoginPhoneKey);
-    //清除缓存饺子信息
-    NSMutableArray *dumplingLogingInforArray = [NSMutableArray arrayWithContentsOfFile:DumplingInforLogingPath];
-    [dumplingLogingInforArray removeAllObjects];
-    [dumplingLogingInforArray writeToFile:DumplingInforLogingPath atomically:YES];
+    //    NSMutableArray *dumplingLogingInforArray = [NSMutableArray arrayWithContentsOfFile:DumplingInforLogingPath];
+    //    [dumplingLogingInforArray removeAllObjects];
+    //    [dumplingLogingInforArray writeToFile:DumplingInforLogingPath atomically:YES];
 }
-- (void)saveLoginInfoWithUserId:(NSString *)userId andPhone:(NSString *)phone{
+
+
+/**
+ *  为捞一捞模块保存登陆信息
+ */
++ (void)saveLoginInforWithUserId:(NSString *)userId andPhone:(NSString *)phone{
+    
     MySetObjectForKey(userId, UserIDKey);
     MySetObjectForKey(phone, LoginPhoneKey);
 }
+
 @end

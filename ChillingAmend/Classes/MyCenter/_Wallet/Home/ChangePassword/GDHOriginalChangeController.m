@@ -48,10 +48,10 @@
 
 /** 设置导航 */
 -(void)makeNav{
-    self.backView.backgroundColor = WalletHomeNAVGRD
-    self.mallTitleLabel.textColor = [UIColor whiteColor];
-    self.mallTitleLabel.font = WalletHomeNAVTitleFont
-    [self.leftBackButton setImage:[UIImage imageNamed:@"title_btn_back02"] forState:UIControlStateNormal];
+//    self.backView.backgroundColor = WalletHomeNAVGRD
+//    self.mallTitleLabel.textColor = [UIColor whiteColor];
+//    self.mallTitleLabel.font = WalletHomeNAVTitleFont
+//    [self.leftBackButton setImage:[UIImage imageNamed:@"title_btn_back"] forState:UIControlStateNormal];
     mainView.backgroundColor = [UIColor colorWithRed:0.96f green:0.96f blue:0.96f alpha:1.00f];
     
 }
@@ -97,7 +97,9 @@
 
 /**  1004 接口。 */
 -(void)request1004{
-    
+    [passWord.numTextfiledSix resignFirstResponder];
+    passWord.userInteractionEnabled = NO;
+    self.confirmButton.userInteractionEnabled = NO;
     [WalletRequsetHttp getKeyVC:self andKey:^(NSString *key, NSString *theIDp) {// 获得秘钥、
         
         NSDictionary *dict = [WalletRequsetHttp WalletPersonVerificationPayPassWord1004VerifyPassword:passTheWord];
@@ -108,6 +110,8 @@
         [SINOAFNetWorking postWithBaseURL:url controller:self success:^(id json) {
             /**  关闭转圈 */
             [self chrysanthemumClosed];
+            self.confirmButton.userInteractionEnabled = YES;
+            passWord.userInteractionEnabled = YES;
             NSDictionary *dicJson = json;
             if ([dicJson[@"code"] isEqualToString:@"100"]) {
                 payPassWordViewController *pay = [[payPassWordViewController alloc] init];
@@ -118,10 +122,14 @@
             }
             NSLog(@"%@",json);
         } failure:^(NSError *error) {
+            passWord.userInteractionEnabled = YES;
+            self.confirmButton.userInteractionEnabled = YES;
             [self showMsg:ShowMessage];
             // 关闭转圈
             [self chrysanthemumClosed];
         } noNet:^{
+            passWord.userInteractionEnabled = YES;
+            self.confirmButton.userInteractionEnabled = YES;
             [self chrysanthemumClosed];
         }];
      }];
@@ -140,4 +148,11 @@
         return YES;
     }
 }
+
+- (void)dealloc
+{
+    [self chrysanthemumClosed];
+}
+
+
 @end

@@ -19,7 +19,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *InputTheTextFiled;
 /** 验证码提示信息 */
 @property (weak, nonatomic) IBOutlet UILabel *VerificationCode;
-/** 找回密码 */
+/** 找回密码  判断是否是从找回密码中push 到当前页面 */
 @property (nonatomic, copy) NSString *findPassWord;
 /** 发送按钮事件 */
 - (IBAction)thnSendButtonDown:(id)sender;
@@ -29,5 +29,10 @@
 /** 确定按钮 事件  */
 - (IBAction)theconfirmButtonDown:(id)sender;
 
+/**  未设置密码，提现，设置了密码后返回提现界面 */
+@property (nonatomic,copy) NSString *fromVcToSetPassWord;
+
+// 捞一捞页面push 过来
+@property (nonatomic,copy) NSString *LYLPushtoSetpassWord;
 
 @end
